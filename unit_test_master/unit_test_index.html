@@ -7,48 +7,49 @@
     <title>Shasta Exchange - Password Generator v0.001</title>
     <!-- GLOBAL -->
     <script type="text/javascript">
-      var alphabet_list = = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    </script>
-
-    <!-- UNIT TEST | ISOLATED -->
-    <script type="text/javascript">
-      function unit_test_isolated_rotate_character_by_alphabet_map(character, iterations)
-      {
-        //Find character' index
-        let characters_alphabet_index = -1;
-        let iterator = 0;
-        while(iterator < alphabet_list.length)
+      var alphabet_list = "abcdefghijklmnopqrstuvwxyz";//ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      <!-- UNIT TEST | ISOLATED -->
+        function unit_test_isolated_rotate_character_by_alphabet_map(character, iterations)
         {
-          //Is index?
-          characters_alphabet_index = characters_alphabet_index + 1;
-          if(alphabet_list[characters_alphabet_index] == character)
+          alert("FUNCTION RAN");
+          //Find character' index
+          let characters_alphabet_index = -1;
+          let iterator = 0;
+          while(iterator < alphabet_list.length)
           {
-            iterator = alphabet_list.length;
-          }else{
-            iterator = alphabet_list.length;
+            //Is index?
+            characters_alphabet_index = characters_alphabet_index + 1;
+            if(alphabet_list[characters_alphabet_index] == character)
+            {
+              iterator = alphabet_list.length;
+            }else{
+              iterator = alphabet_list.length;
+            }
           }
+
+          //Iterate
+          let alphabet_list_index = characters_alphabet_index;
+          iterator = 0;
+          while(iterator < iterations)
+          {
+            alphabet_list_index = alphabet_list_index + 1;
+            if(alphabet_list_index >= alphabet_list.length) {
+              alphabet_list_index = 0;
+            }
+
+            //Next
+            iterator = iterator + 1;
+          }
+
+          alert(alphabet_list[alphabet_list_index]);
         }
-
-        alert(characters_alphabet_index);
-        /*
-        //Iterate
-        let alphabet_list_index = 0;
-        iterator = 0;
-        while(iterator < iterations)
-        {
-
-
-          //Next
-          iterator = iterator + 1;
-        }
-         */
-      }
     </script>
     <script type="text/javascript">
       function page_loaded()
       {
         //Run isolated unit test.
-        unit_test_isolated_rotate_character_by_alphabet_map
+        unit_test_isolated_rotate_character_by_alphabet_map("a", 1);
+        unit_test_isolated_rotate_character_by_alphabet_map("a", 27);
       }
     </script>
   </head>
