@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shasta Exchange - Password Generator v0.001</title>
+    <!-- GLOBAL -->
+    <script type="text/javascript">
+      var alphabet_list = = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    </script>
+
+    <!-- UNIT TEST | ISOLATED -->
+    <script type="text/javascript">
+      function unit_test_isolated_rotate_character_by_alphabet_map(character, iterations)
+      {
+        //Find character' index
+        let characters_alphabet_index = -1;
+        let iterator = 0;
+        while(iterator < alphabet_list.length)
+        {
+          //Is index?
+          characters_alphabet_index = characters_alphabet_index + 1;
+          if(alphabet_list[characters_alphabet_index] == character)
+          {
+            iterator = alphabet_list.length;
+          }else{
+            iterator = alphabet_list.length;
+          }
+        }
+
+        alert(characters_alphabet_index);
+        /*
+        //Iterate
+        let alphabet_list_index = 0;
+        iterator = 0;
+        while(iterator < iterations)
+        {
+
+
+          //Next
+          iterator = iterator + 1;
+        }
+         */
+      }
+    </script>
+    <script type="text/javascript">
+      function page_loaded()
+      {
+        //Run isolated unit test.
+        unit_test_isolated_rotate_character_by_alphabet_map
+      }
+    </script>
+  </head>
+  <body onLoad="page_loaded();">
+	test
+  </body>
+</html>
