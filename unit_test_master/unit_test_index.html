@@ -11,7 +11,6 @@
       <!-- UNIT TEST | ISOLATED -->
         function unit_test_isolated_rotate_character_by_alphabet_map(character, iterations)
         {
-          alert("FUNCTION RAN");
           //Find character' index
           let characters_alphabet_index = -1;
           let iterator = 0;
@@ -33,7 +32,8 @@
           while(iterator < iterations)
           {
             alphabet_list_index = alphabet_list_index + 1;
-            if(alphabet_list_index >= alphabet_list.length) {
+            if(alphabet_list_index >= alphabet_list.length)
+            {
               alphabet_list_index = 0;
             }
 
@@ -41,15 +41,70 @@
             iterator = iterator + 1;
           }
 
-          alert(alphabet_list[alphabet_list_index]);
+          return alphabet_list[alphabet_list_index];
         }
-    </script>
-    <script type="text/javascript">
+
+      function unit_test_isolated_reorder_character_positions(string_to_reorder, iterations)
+      {
+        let string_to_reorder_to_take_from = ""+string_to_reorder;
+  alert("running");
+        let iterator = 0;
+        while(iterator < string_to_reorder.length)
+        {
+          /*
+          //Go through each index(picking randomly) within string_to_reorder and place them at the end of a concatonated string.
+            //Pick index based on string_to_reorder(index) times iterations
+            let total_iterations = iterator * iterations;
+            let pick_index_iterator = 0;
+            while(pick_index_iterator < total_iterations)
+            {
+              pick_index_iterator = pick_index_iterator + 1;
+              if(pick_index_iterator >= string_to_reorder.length)
+              {
+                pick_index_iterator = 0;
+              }
+            }
+
+            //Is this a capturable character or does it need to be selected through forward index iterations.
+            let character_captured = "";
+            if(string_to_reorder_to_take_from[pick_index_iterator] != " ")
+            {
+              //This is a caputable character.
+              character_captured = string_to_reorder_to_take_from[pick_index_iterator];
+              string_to_reorder_to_take_from[pick_index_iterator] = " ";
+            }/*else{
+              //Cycle to next available character.
+              let keep_looping = 1;
+              while(keep_looping == 1)
+              {
+                pick_index_iterator = pick_index_iterator + 1;
+                if(pick_index_iterator >= string_to_reorder_to_take_from.length)
+                {
+                  pick_index_iterator = 0;
+                }else if(string_to_reorder_to_take_from[pick_index_iterator] != " ")
+                {
+                  //stop searching
+                  keep_looping = 0;
+
+                  character_captured = string_to_reorder_to_take_from[pick_index_iterator];
+                  string_to_reorder_to_take_from[pick_index_iterator] = " ";
+                }
+              }
+            }*/
+            alert("TEST");
+
+
+          //Next
+          iterator = iterator + 1;
+        }
+      }
+
       function page_loaded()
       {
+        alert("PAGE LOADED");
+
         //Run isolated unit test.
-        unit_test_isolated_rotate_character_by_alphabet_map("a", 1);
-        unit_test_isolated_rotate_character_by_alphabet_map("a", 27);
+        unit_test_isolated_reorder_character_positions("testingtesting", 2);
       }
     </script>
   </head>
