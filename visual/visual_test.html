@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shasta Exchange - Password Generator v0.002</title>
+    <!-- GLOBAL -->
+    <script type="text/javascript">
+        var alphabet_list = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        //assistive
+        function assistive_replace_character_within_string(string, character_to_replace, index_to_replace_at)
+        {
+          let replaced_string = string.substring(0, index_to_replace_at) + character_to_replace + string.substring(index_to_replace_at + 1);
+          return replaced_string;
+        }
+
+        // UNIT TEST | ISOLATED
+        function unit_test_isolated_rotate_character_by_alphabet_map(character, iterations)
+        {
+          //Find character' index
+          let characters_alphabet_index = -1;
+          let iterator = 0;
+          while(iterator < alphabet_list.length)
+          {
+            //Is index?
+            characters_alphabet_index = characters_alphabet_index + 1;
+            if(alphabet_list[characters_alphabet_index] == character)
+            {
+              iterator = alphabet_list.length;
+            }else{
+              iterator = iterator + 1;
+            }
+          }
+
+          //Iterate
+          let alphabet_list_index = characters_alphabet_index;
+          iterator = 0;
+          while(iterator < iterations)
+          {
+            alphabet_list_index = alphabet_list_index + 1;
+            if(alphabet_list_index >= alphabet_list.length)
+            {
+              alphabet_list_index = 0;
+            }
+
+            //Next
+            iterator = iterator + 1;
+          }
+
+          return alphabet_list[alphabet_list_index];
+        }
+
+        function unit_test_isolated_reorder_character_positions(string_to_reorder, iterations)
+        {
+          let reordered_string = "";
+          let string_to_reorder_to_take_from = ""+string_to_reorder;
+          let iterator = 1;
+          while(iterator < string_to_reorder.length+1)
+          {
+
+            //Go through each index(picking randomly) within string_to_reorder and place them at the end of a concatonated string.
+              //Pick index based on string_to_reorder(index) times iterations
+              let total_iterations = iterator * iterations;
+              let pick_index_iterator = 0;
+              let choosen_index = -1;
+              while(pick_index_iterator < total_iterations)
+              {
+                pick_index_iterator = pick_index_iterator + 1;
+                choosen_index = choosen_index + 1;
+                if(choosen_index >= string_to_reorder.length)
+                {
+                  choosen_index = -1;
+                }
+              }
+
+              if(choosen_index == -1)
+              {
+                choosen_index = 0;
+              }
+
+
+              //Did the pick index land on a character
+              if(string_to_reorder_to_take_from[choosen_index] != " ")
+              {
+                reordered_string = reordered_string+""+string_to_reorder_to_take_from[choosen_index];
+                string_to_reorder_to_take_from = assistive_replace_character_within_string(string_to_reorder_to_take_from, " ", choosen_index);
+
+              }else if(string_to_reorder_to_take_from[choosen_index] == " ")
+              {
+                //Go to next available character.
+                let next_available_character_iterator = 0;
+                while(next_available_character_iterator < string_to_reorder_to_take_from.length)
+                {
+                  choosen_index = choosen_index + 1;
+                  if(choosen_index >= string_to_reorder_to_take_from.length)
+                  {
+                    choosen_index = 0;
+                  }
+                  //Does character exist here?
+                  if(string_to_reorder_to_take_from[choosen_index] != " ")
+                  {
+                    //Found next available character
+                    reordered_string = reordered_string+""+string_to_reorder_to_take_from[choosen_index];
+
+                    string_to_reorder_to_take_from = assistive_replace_character_within_string(string_to_reorder_to_take_from, " ", choosen_index);
+                    next_available_character_iterator = string_to_reorder_to_take_from.length;
+                  }else{
+                    next_available_character_iterator = next_available_character_iterator + 1;
+                  }
+                }
+              }
+
+            //Next
+            iterator = iterator + 1;
+          }
+
+          return reordered_string;
+        }
+
+        function unittest_expand_noncomplete_obfuscated_password(noncomplete_obfuscated_password, obfuscation_iterations)
+        {
+
+          let partial_noncomplete_obfuscated_password = "";
+
+          //Fill spaces at the end of the noncompleted obfuscated password string.
+          let spaces_to_fill = 32 - partial_noncomplete_obfuscated_password.length;
+          let iterator = 2;//Always start at two so there is no plaintext available(iterator * iterations)
+          let noncomplete_obfuscated_password_index = 0;
+          while(iterator < spaces_to_fill + 2)
+          {
+            //Generate character
+            noncomplete_obfuscated_password_index = noncomplete_obfuscated_password_index + 1;
+            if (noncomplete_obfuscated_password_index >= partial_noncomplete_obfuscated_password.length)
+            {
+              noncomplete_obfuscated_password_index = 0;
+            }
+            let generated_character = unit_test_isolated_rotate_character_by_alphabet_map(noncomplete_obfuscated_password[noncomplete_obfuscated_password_index], (iterator * obfuscation_iterations));
+            partial_noncomplete_obfuscated_password = partial_noncomplete_obfuscated_password + "" + generated_character;
+
+            //next
+            iterator = iterator + 1;
+          }
+
+          //Pick a random character and place it to the front of a new password
+          let obfuscated_password = "";
+          let inprogress_obfuscated_password = noncomplete_obfuscated_password + "" + partial_noncomplete_obfuscated_password;
+            //Aquire the index
+              //Loop through as many character total that is needed(32 characters).
+              iterator = 2; //always starts at not zero and one in order to have randomness
+              while(iterator < (32+2))
+              {
+                let index_iterations = (iterator * obfuscation_iterations); //Randomly generated number that is the limit the iterations_counter
+                let index_iterations_counter = 0; //iterates until the limit is it.
+                let inprogress_obfuscated_password_index = 0; //this cycles through the string and is itended to land on the selected co-inciding index.
+                while(index_iterations_counter < index_iterations)
+                {
+                  inprogress_obfuscated_password_index = inprogress_obfuscated_password_index + 1;
+                  if(inprogress_obfuscated_password_index > inprogress_obfuscated_password.length)
+                  {
+                    inprogress_obfuscated_password_index = 0;
+                  }
+
+                  index_iterations_counter = index_iterations_counter + 1;
+                }
+
+                //Is a character available for extraction?
+                if(inprogress_obfuscated_password[inprogress_obfuscated_password_index] != " ")
+                {
+                  obfuscated_password = obfuscated_password + inprogress_obfuscated_password[inprogress_obfuscated_password_index];
+                  inprogress_obfuscated_password = assistive_replace_character_within_string(inprogress_obfuscated_password, " ", inprogress_obfuscated_password_index);
+
+                }else if(inprogress_obfuscated_password[inprogress_obfuscated_password_index] == " ")
+                {
+                  //Forward the selected index until there is a character available.
+                  let forward_index = inprogress_obfuscated_password_index;
+                  let keep_looping = 1;
+                  while(keep_looping == 1)
+                  {
+                    forward_index = forward_index + 1;
+                    if(forward_index >= inprogress_obfuscated_password.length)
+                    {
+                      forward_index = 0;
+                    }
+
+                    if(inprogress_obfuscated_password[forward_index] != " ")
+                    {
+                      //stop searching.
+                      keep_looping = 0;
+                      obfuscated_password = obfuscated_password + inprogress_obfuscated_password[forward_index];
+                      inprogress_obfuscated_password = assistive_replace_character_within_string(inprogress_obfuscated_password, " ", forward_index);
+
+                    }
+                  }
+                }
+
+                iterator = iterator + 1;
+              }
+              let nonreordered_obfuscated_password = obfuscated_password + noncomplete_obfuscated_password;
+              return nonreordered_obfuscated_password;
+        }
+
+        //container function (this is the function you run to execute what is intended)
+        function execute_password_generator(plaintext_password, obfuscation_iterations)
+        {
+          let output = [];
+          output["error"] = -1;
+          output["obfuscated_password"] = "";
+
+          //precheck
+          let precheck_iterator = 0;
+          while(precheck_iterator < plaintext_password.length)
+          {
+            //Iterate through character map until an accepted character is found or return fault.
+            let accepted_character = -1;
+            let character_map_iterator = 0;
+            while(character_map_iterator < alphabet_list.length)
+            {
+              if(plaintext_password[precheck_iterator] == alphabet_list[character_map_iterator])
+              {
+                accepted_character = 1;
+                character_map_iterator = alphabet_list.length;//stop while loop
+              }else{
+                character_map_iterator = character_map_iterator + 1;
+              }
+            }
+
+            if(accepted_character == -1)
+            {
+              output["error"] = 1;
+              precheck_iterator = plaintext_password.length;
+            }else if(accepted_character == 1){
+              //next
+              precheck_iterator = precheck_iterator + 1;
+            }
+          }
+
+          if(output["error"] == -1)
+          {
+            //for each character, rotate by alphabet map
+            let new_password = plaintext_password;
+            let iterator = 2;//Always start at two so there is no plaintext available(iterator * iterations)
+            while(iterator < plaintext_password.length+2)
+            {
+              let rotated_character = unit_test_isolated_rotate_character_by_alphabet_map(plaintext_password[iterator], obfuscation_iterations);
+              new_password = assistive_replace_character_within_string(new_password, rotated_character, iterator);
+
+              //next
+              iterator = iterator + 1;
+            }
+
+            //Expand
+            let obfuscated_password_expanded = unittest_expand_noncomplete_obfuscated_password(new_password, obfuscation_iterations);
+
+
+            //
+            let obfuscated_password = unit_test_isolated_reorder_character_positions(obfuscated_password_expanded, obfuscation_iterations);
+            output["obfuscated_password"] = obfuscated_password;
+
+          }else{
+            console.log("error");
+          }
+
+
+          //Return
+          return output;
+        }
+
+        function visual_queue_generate_obfuscated_password()
+        {
+          let plaintext_password = document.getElementById("plaintext_password").value;
+          let obfuscation_iterations = document.getElementById("obfuscation_iterations").value;
+          let generated_password = obfuscate_password(plaintext_password, obfuscation_iterations);
+          if(generated_password["error"] != -1)
+          {
+            console.log(generated_password["obfuscated_password"]);
+          }
+        }
+
+
+
+      function obfuscate_password(plaintext_password, obfuscation_iterations)
+      {
+        //Run
+        obfuscated_password = execute_password_generator(plaintext_password, obfuscation_iterations);
+        return obfuscated_password;
+      }
+    </script>
+    <style type="text/css">
+      *{
+        margin:0;
+        padding:0;
+      }
+      body{
+        background: rgb(31,28,11);
+        background: linear-gradient(180deg, rgba(31,28,11,1) 0%, rgba(41,32,0,1) 100%);
+        background-attachment: fixed;
+      }
+      @font-face
+      {
+        font-family: lobster;
+        src: url("/visual/Lobster/Lobster-Regular.ttf");
+      }
+    </style>
+  </head>
+  <body>
+	<div style="width:99.999999%;">
+      <div style="width:500px;margin:0.5em auto;font-size:4em;text-align:center;font-family:lobster;-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: yellow;background: -webkit-linear-gradient(#f7b108, #ffcc06);-webkit-background-clip: text;-webkit-text-fill-color: transparent;">
+        Shasta Exchange
+      </div>
+
+      <div style="width:700px;font-size:120%;font-weight:bold;margin:1em auto;color:#FFF;">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Here at Shasta Exchange we highly value the importance of privacy and data protection. We understand that our esteemed customer base comprehends the significance of cryptography and the benefits of strong passwords. That's why we are delighted to provide you with an online experience that prioritizes security.
+      </div>
+      <div style="color:#f7b108;margin-top:2.5em;margin-bottom:1em;width:99.999%;text-align:center;font-size:110%;font-weight:bold;">
+        Auditable Password Generator
+      </div>
+      <div style="width:700px;margin:0 auto;">
+        <div style="">
+          <input style="width:99.999999%;padding:1em;" type="text" id="plaintext_password" placeholder="Type in the password you wish to remember here."/>
+        </div>
+        <div style="">
+          <input style="width:99.999999%;padding:1em;" type="text" id="obfuscation_iterations" placeholder="Type in the number that you wish to remember with conjunction of your password."/>
+        </div>
+        <div style="text-align:center;margin-top:1.5em;">
+          <a href="javascript:void(0);" style="border-radius:5px;padding:0.5em;text-underline:none;background:yellow; color:#000;"  onClick="visual_queue_generate_obfuscated_password();">Obfuscate Password</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
