@@ -125,6 +125,7 @@
 
           //Fill spaces at the end of the noncompleted obfuscated password string.
           let spaces_to_fill = 32 - partial_noncomplete_obfuscated_password.length;
+
           let iterator = 2;//Always start at two so there is no plaintext available(iterator * iterations)
           let noncomplete_obfuscated_password_index = 0;
           while(iterator < spaces_to_fill + 2)
@@ -208,11 +209,12 @@
           output["obfuscated_password"] = "";
 
           //precheck
+          let all_characters_are_found_within_character_map = 1;
           let precheck_iterator = 0;
           while(precheck_iterator < plaintext_password.length)
           {
             //Iterate through character map until an accepted character is found or return fault.
-            let accepted_character = -1;
+            let accepted_character = 0;
             let character_map_iterator = 0;
             while(character_map_iterator < alphabet_list.length)
             {
@@ -225,19 +227,22 @@
               }
             }
 
-            if(accepted_character == -1)
+            if(accepted_character == 0)
             {
-              output["error"] = 1;
+                all_characters_are_found_within_character_map = -1;
               precheck_iterator = plaintext_password.length;
-            }else if(accepted_character == 1){
+            }else if(accepted_character == 1)
+            {
               //next
               precheck_iterator = precheck_iterator + 1;
             }
           }
 
-          if(output["error"] == -1)
+
+          if(all_characters_are_found_within_character_map == 1)
           {
-            //for each character, rotate by alphabet map
+              output["error"] = 0;
+              //for each character, rotate by alphabet map
             let new_password = plaintext_password;
             let iterator = 2;//Always start at two so there is no plaintext available(iterator * iterations)
             while(iterator < plaintext_password.length+2)
@@ -248,7 +253,7 @@
               //next
               iterator = iterator + 1;
             }
-
+console.log(new_password);
             //Expand
             let obfuscated_password_expanded = unittest_expand_noncomplete_obfuscated_password(new_password, obfuscation_iterations);
 
@@ -274,6 +279,9 @@
           if(generated_password["error"] != -1)
           {
             console.log(generated_password["obfuscated_password"]);
+              document.getElementById("generated_password").innerHTML = generated_password["obfuscated_password"];
+          }else{
+              console.log(generated_password);
           }
         }
 
@@ -322,8 +330,11 @@
         <div style="">
           <input style="width:99.999999%;padding:1em;" type="text" id="obfuscation_iterations" placeholder="Type in the number that you wish to remember with conjunction of your password."/>
         </div>
+          <div id="generated_password" style="margin-top:0.5em;text-align:center; color:#FFF;">
+                &nbsp;
+          </div>
         <div style="text-align:center;margin-top:1.5em;">
-          <a href="javascript:void(0);" style="border-radius:5px;padding:0.5em;text-underline:none;background:yellow; color:#000;"  onClick="visual_queue_generate_obfuscated_password();">Obfuscate Password</a>
+          <a href="javascript:void(0);" style="border-radius:5px;padding:0.5em;text-decoration:none;background:yellow; color:#000;"  onClick="visual_queue_generate_obfuscated_password();">Obfuscate Password</a>
         </div>
       </div>
     </div>
